@@ -20,10 +20,19 @@ const git_pull = async (app) => {
     if (fs.existsSync(`${pwd}/package.json`)) {
         console.log('found package.json')
 
-        await exec(`
-        cd ${pwd} &&
-        npm i
-        `)
+        await exec(`cd ${pwd} && npm i`)
+
+        let package_json
+        try {
+            package_json = fs.readFileSync(`${pwd}/package.json`)
+            package_json = JSON.parse(package_json)
+        } catch (error) {
+            // console.error(error)
+        }
+
+        if (package_json.scripts.build)
+            if (!package_json.scripts.build.includes('next '))
+                await exec(`cd ${pwd} && npm run build`)
     }
     if (fs.existsSync(`${pwd}/next.config.js`)) {
         console.log('found next.config.js')
@@ -39,10 +48,10 @@ const git_pull = async (app) => {
 
         const tmp = `.next_tmp`
         await exec(`
-        cd ${pwd} &&
-        BUILD_DIR=${tmp} npm run build && 
-        rm -rf .next &&
-        mv ${tmp} .next 
+cd ${pwd} &&
+BUILD_DIR=${tmp} npm run build && 
+rm -rf .next &&
+mv ${tmp} .next 
       `)
     }
 

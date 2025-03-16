@@ -33,14 +33,13 @@ npm run build
 # cd $HOME
 git clone git@github.com:michaelwitk/webhook.git
 
-# nodejs 
-NAME=simple
-PORT=3000
-pm2 start "PORT=$PORT index.js" --log-date-format "YYYY-MM-DD HH:mm:ss" --name $NAME 
+# nodejs, single process
+NAME=webhook
+pm2 start "PORT=3000 npm run start" --log-date-format "YYYY-MM-DD HH:mm:ss" --name $NAME 
 
-# ... or nextjs
+# ... or nextjs, multi process
 NAME=blog
-PORT=3001 pm2 start ./node_modules/.bin/next -i 2 --log-date-format "YYYY-MM-DD HH:mm:ss" --name blog -- start
+PORT=3001 pm2 start ./node_modules/.bin/next -i 2 --log-date-format "YYYY-MM-DD HH:mm:ss" --name $NAME -- start
 
 pm2 install pm2-logrotate
 pm2 save
