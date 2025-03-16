@@ -30,9 +30,15 @@ const git_pull = async (app) => {
             // console.error(error)
         }
 
-        if (package_json.scripts.build)
-            if (!package_json.scripts.build.includes('next '))
-                await exec(`cd ${pwd} && npm run build`)
+        let build = true
+        if (
+            package_json &&
+            package_json.dependencies &&
+            package_json.dependencies.next
+        )
+            build = false
+
+        if (build) await exec(`cd ${pwd} && npm run build`)
     }
     if (fs.existsSync(`${pwd}/next.config.js`)) {
         console.log('found next.config.js')
