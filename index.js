@@ -2,9 +2,9 @@
 // NAME=webhook
 // pm2 start "PORT=3000 npm run start" --log-date-format "YYYY-MM-DD HH:mm:ss" --name $NAME
 
-// monorepo scripts, multi process
-// NAME=webhook--cron
-// PORT=3005 pm2 start app.js -i 2 --log-date-format "YYYY-MM-DD HH:mm:ss" --name $NAME
+// monorepo scripts, single process
+// NAME=daily--cron
+// pm2 start cron.js --log-date-format "YYYY-MM-DD HH:mm:ss" --name $NAME
 
 // nextjs, multi process
 // NAME=nextjs
