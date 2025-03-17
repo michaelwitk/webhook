@@ -99,7 +99,7 @@ const server = http.createServer(async (original_req, res) => {
         let apps = await pm2_jlist()
         apps = apps.map((app) => app.name)
         // always end with self
-        apps.sort((a) => (a === 'simple' ? 1 : -1))
+        apps.sort((a) => (a === 'webhook' ? 1 : -1))
 
         res.writeHead(200, { 'Content-Type': 'text/plain' })
         res.end(`restarting: ${apps.join(', ')}`)
@@ -147,6 +147,14 @@ const server = http.createServer(async (original_req, res) => {
         res.end(`restarting ${app}`)
 
         await pm2_reload(app)
+
+        // reload monorepo scripts
+        // example: pm2 start app.js --name webhook--cron
+        let apps = await pm2_jlist()
+        apps = apps.map((app) => app.name)
+        apps = apps.filter((_app) => _app !== app)
+        apps = apps.filter((app) => app.startsWith(`${app}--`))
+        for (let i = 0; i < array.length; i++) await pm2_reload(array[i])
     })
 })
 
