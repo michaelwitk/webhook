@@ -42,7 +42,9 @@ const git_pull = async (app) => {
             // console.error(error)
         }
 
-        let build = true
+        let build
+        if (package_json && package_json.scripts && package_json.scripts.build)
+            build = true
         if (
             package_json &&
             package_json.dependencies &&
