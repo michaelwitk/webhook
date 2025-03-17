@@ -1,3 +1,15 @@
+// nodejs, single process
+// NAME=webhook
+// pm2 start "PORT=3000 npm run start" --log-date-format "YYYY-MM-DD HH:mm:ss" --name $NAME
+
+// monorepo scripts, multi process
+// NAME=webhook--cron
+// PORT=3005 pm2 start app.js -i 2 --log-date-format "YYYY-MM-DD HH:mm:ss" --name $NAME
+
+// nextjs, multi process
+// NAME=nextjs
+// PORT=3005 pm2 start ./node_modules/.bin/next -i 2 --log-date-format "YYYY-MM-DD HH:mm:ss" --name $NAME -- start
+
 const http = require('http')
 const crypto = require('crypto')
 const assert = require('assert')
@@ -149,7 +161,6 @@ const server = http.createServer(async (original_req, res) => {
         await pm2_reload(app)
 
         // reload monorepo scripts
-        // example: pm2 start app.js --name webhook--cron
         let apps = await pm2_jlist()
         apps = apps.map((app) => app.name)
         apps = apps.filter((_app) => _app !== app)
