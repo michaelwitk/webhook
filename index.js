@@ -148,11 +148,8 @@ const server = http.createServer(async (original_req, res) => {
             res.end('Invalid signature')
             return
         }
-        // console.log(body)
 
         const payload = JSON.parse(body)
-        // console.log('Received GitHub Webhook:')
-        // console.log(payload)
 
         const app = payload.repository.name
         await git_pull(app)
@@ -165,9 +162,11 @@ const server = http.createServer(async (original_req, res) => {
         // reload monorepo scripts
         let apps = await pm2_jlist()
         apps = apps.map((app) => app.name)
+        console.log('debug', apps)
         apps = apps.filter((_app) => _app !== app)
+        console.log('debug 1', apps)
         apps = apps.filter((app) => app.startsWith(`${app}--`))
-        console.log('remain', apps)
+        console.log('debug 2', apps)
         for (let i = 0; i < apps.length; i++) await pm2_reload(apps[i])
     })
 })
