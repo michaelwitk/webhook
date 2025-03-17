@@ -112,6 +112,8 @@ const server = http.createServer(async (original_req, res) => {
     if (req.searchParams.get('debug')) {
         let apps = await pm2_jlist()
         apps = apps.map((app) => app.name)
+        apps = [...new Set(apps)]
+
         // always end with self
         apps.sort((a) => (a === 'webhook' ? 1 : -1))
 
@@ -162,10 +164,12 @@ const server = http.createServer(async (original_req, res) => {
         // reload monorepo scripts
         let apps = await pm2_jlist()
         apps = apps.map((app) => app.name)
+        apps = [...new Set(apps)]
+
         console.log('debug', apps)
         apps = apps.filter((_app) => _app !== app)
         console.log('debug 1', apps)
-        apps = apps.filter((app) => app.startsWith(`${app}--`))
+        apps = apps.filter((_app) => _app.startsWith(`${app}--`))
         console.log('debug 2', apps)
         for (let i = 0; i < apps.length; i++) await pm2_reload(apps[i])
     })
