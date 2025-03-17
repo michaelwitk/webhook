@@ -166,11 +166,8 @@ const server = http.createServer(async (original_req, res) => {
         apps = apps.map((app) => app.name)
         apps = [...new Set(apps)]
 
-        console.log('debug', apps)
         apps = apps.filter((_app) => _app !== app)
-        console.log('debug 1', apps)
         apps = apps.filter((_app) => _app.startsWith(`${app}--`))
-        console.log('debug 2', apps)
         for (let i = 0; i < apps.length; i++) await pm2_reload(apps[i])
     })
 })
