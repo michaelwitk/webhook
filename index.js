@@ -110,6 +110,12 @@ const server = http.createServer(async (original_req, res) => {
     }
 
     if (req.searchParams.get('debug')) {
+        if (req.searchParams.get('debug') !== SECRET) {
+            res.writeHead(405, { 'Content-Type': 'text/plain' })
+            res.end('Method Not Allowed')
+            return
+        }
+
         let apps = await pm2_jlist()
         apps = apps.map((app) => app.name)
         apps = [...new Set(apps)]
